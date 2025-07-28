@@ -10,7 +10,7 @@ function App() {
 
   // 👇 Call your API on first load
   useEffect(() => {
-    fetch("https://yagmrkw1z8.execute-api.us-east-1.amazonaws.com/prod/visits", {
+    fetch("https://t7umcfnjg9.execute-api.eu-central-1.amazonaws.com/prod/visits", {
       method: "POST"
     })
       .then(res => res.json())
