@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 
 function App() {
@@ -8,15 +7,12 @@ function App() {
   const [visits, setVisits] = useState(null)
   const [error, setError] = useState(null)
 
-  // 👇 Call your API on first load
   useEffect(() => {
     fetch("https://dr678hel4k.execute-api.eu-central-1.amazonaws.com/prod/visits", {
       method: "POST"
     })
       .then(res => res.json())
-      .then(data => {
-        setVisits(data.visits)
-      })
+      .then(data => setVisits(data.visits))
       .catch(err => {
         console.error("API error:", err)
         setError("Failed to fetch visit count")
@@ -24,27 +20,17 @@ function App() {
   }, [])
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-        <p>
-          👁️ Visitor Count:{" "}
+    <div className="container text-center py-5">
+      <h1 className="mb-4">📊 Profile Visitors Dashboard</h1>
+
+      <div className="card p-4 mx-auto mb-4 shadow-sm" style={{ maxWidth: "400px" }}>
+        <h4 className="mb-3">Welcome Back!</h4>
+        <p className="text-muted">This dashboard shows how many times your profile has been visited.</p>
+
+        <p className="fw-bold">
+          Visits:{" "}
           {error ? (
-            <span style={{ color: "red" }}>{error}</span>
+            <span className="text-danger">{error}</span>
           ) : visits === null ? (
             "Loading..."
           ) : (
@@ -52,10 +38,15 @@ function App() {
           )}
         </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+
+      <div className="card p-4 mx-auto shadow-sm" style={{ maxWidth: "400px" }}>
+        <h5 className="mb-3">Local Counter</h5>
+        <p className="mb-2">Just a local counter for fun:</p>
+        <button className="btn btn-success" onClick={() => setCount(count + 1)}>
+          Count is {count}
+        </button>
+      </div>
+    </div>
   )
 }
 
