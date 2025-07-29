@@ -8,7 +8,7 @@ function App() {
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    fetch("https://ft9egq297c.execute-api.eu-central-1.amazonaws.com/visitors", {
+    fetch("https://zkyjvmub0k.execute-api.eu-central-1.amazonaws.com/visitors/", {
       method: "POST"
     })
       .then(res => res.json())
