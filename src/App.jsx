@@ -19,6 +19,30 @@ function App() {
     }
   }, [auth.isAuthenticated]);
 
+  useEffect(() => {
+    if (!auth.isAuthenticated && !auth.isLoading) {
+      auth.signinRedirect(); // Redirect to Cognito login page
+    }
+  }, [auth.isAuthenticated, auth.isLoading]);
+
+  const handleSignOut = () => {
+  const domain = "https://eu-central-19qe4outov.auth.eu-central-1.amazoncognito.com";
+  const clientId = "5fej7hpgs2p8qp3k37tq0p3sni";
+  const logoutRedirect = window.location.origin + "/"; // http://localhost:5174/
+
+  // Full logout URL
+  const logoutUrl = `${domain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutRedirect)}`;
+
+  // Clear browser storage (optional)
+  localStorage.clear();
+  sessionStorage.clear();
+
+  // Redirect to logout
+  window.location.href = logoutUrl;
+};
+
+
+
   if (auth.isLoading) {
     return <div className="text-center py-5">Checking authentication...</div>;
   }
@@ -43,7 +67,6 @@ function App() {
   }
 
   if (!auth.isAuthenticated) {
-    auth.signinRedirect();
     return <div className="text-center py-5">Redirecting to login...</div>;
   }
 
@@ -58,21 +81,9 @@ function App() {
         </p>
       </div>
       <div className="mt-4">
-        <button 
-  onClick={() => {
-    // Clear local storage first
-    localStorage.clear();
-    sessionStorage.clear();
-    
-    // Use proper Cognito logout URL
-    const currentOrigin = window.location.origin;
-    const logoutUrl = `https://eu-central-19qe4outov.auth.eu-central-1.amazoncognito.com/logout?client_id=5fej7hpgs2p8qp3k37tq0p3sni&logout_uri=${encodeURIComponent(currentOrigin)}`;
-    window.location.href = logoutUrl;
-  }} 
-  className="btn btn-outline-danger"
->
-  Sign Out
-</button>
+        <button onClick={handleSignOut} className="btn btn-danger mt-4">
+      Sign Out
+    </button>
       </div>
     </div>
   );
