@@ -9,6 +9,20 @@ function App() {
   const [visits, setVisits] = useState(null);
   const [error, setError] = useState(null);
 
+  // Add this useEffect to handle callback and debug
+  useEffect(() => {
+    // Log current URL and auth state for debugging
+    console.log('Current URL:', window.location.href);
+    console.log('Auth loading:', auth.isLoading);
+    console.log('Auth error:', auth.error);
+    console.log('Auth authenticated:', auth.isAuthenticated);
+    
+    // If there's a code in URL, we're returning from Cognito
+    if (window.location.search.includes('code=')) {
+      console.log('Detected callback with code, waiting for auth to process...');
+    }
+  }, [auth.isLoading, auth.error, auth.isAuthenticated]);
+
   useEffect(() => {
     if (auth.isAuthenticated) {
       fetch('https://zkyjvmub0k.execute-api.eu-central-1.amazonaws.com/visitors', {
@@ -29,6 +43,17 @@ function App() {
       <div className="text-center py-5">
         <h5 className="text-danger">Authentication Error</h5>
         <p>{auth.error.message}</p>
+        <button 
+          onClick={() => {
+            // Clear storage and try again
+            localStorage.clear();
+            sessionStorage.clear();
+            window.location.href = window.location.origin;
+          }} 
+          className="btn btn-warning mt-3"
+        >
+          Clear Storage & Retry
+        </button>
       </div>
     );
   }
