@@ -5,23 +5,8 @@ import './App.css';
 
 function App() {
   const auth = useAuth();
-  const [count, setCount] = useState(0);
   const [visits, setVisits] = useState(null);
   const [error, setError] = useState(null);
-
-  // Add this useEffect to handle callback and debug
-  useEffect(() => {
-    // Log current URL and auth state for debugging
-    console.log('Current URL:', window.location.href);
-    console.log('Auth loading:', auth.isLoading);
-    console.log('Auth error:', auth.error);
-    console.log('Auth authenticated:', auth.isAuthenticated);
-    
-    // If there's a code in URL, we're returning from Cognito
-    if (window.location.search.includes('code=')) {
-      console.log('Detected callback with code, waiting for auth to process...');
-    }
-  }, [auth.isLoading, auth.error, auth.isAuthenticated]);
 
   useEffect(() => {
     if (auth.isAuthenticated) {
@@ -45,7 +30,6 @@ function App() {
         <p>{auth.error.message}</p>
         <button 
           onClick={() => {
-            // Clear storage and try again
             localStorage.clear();
             sessionStorage.clear();
             window.location.href = window.location.origin;
@@ -59,15 +43,9 @@ function App() {
   }
 
   if (!auth.isAuthenticated) {
-    return (
-      <div className="container text-center py-5">
-        <h1>Secure Dashboard</h1>
-        <p>Please log in to access your profile dashboard.</p>
-        <button onClick={() => auth.signinRedirect()} className="btn btn-primary btn-lg">
-          Sign In with Cognito
-        </button>
-      </div>
-    );
+    // Redirect directly to Cognito login page
+    auth.signinRedirect();
+    return <div className="text-center py-5">Redirecting to login...</div>;
   }
 
   return (
@@ -80,15 +58,15 @@ function App() {
           Visits: {error ? <span className="text-danger">{error}</span> : visits === null ? 'Loading...' : visits}
         </p>
       </div>
-      <div className="card p-4 mx-auto shadow-sm" style={{ maxWidth: '400px' }}>
-        <h5 className="mb-3">Local Counter</h5>
-        <p className="mb-2">A simple local counter:</p>
-        <button className="btn btn-success" onClick={() => setCount(count + 1)}>
-          Count is {count}
-        </button>
-      </div>
       <div className="mt-4">
-        <button onClick={() => auth.signoutRedirect()} className="btn btn-outline-danger">
+        <button 
+          onClick={() => {
+            auth.signoutRedirect();
+            localStorage.clear();
+            sessionStorage.clear();
+          }} 
+          className="btn btn-outline-danger"
+        >
           Sign Out
         </button>
       </div>
