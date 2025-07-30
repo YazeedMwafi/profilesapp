@@ -43,7 +43,6 @@ function App() {
   }
 
   if (!auth.isAuthenticated) {
-    // Redirect directly to Cognito login page
     auth.signinRedirect();
     return <div className="text-center py-5">Redirecting to login...</div>;
   }
@@ -60,15 +59,20 @@ function App() {
       </div>
       <div className="mt-4">
         <button 
-          onClick={() => {
-            auth.signoutRedirect();
-            localStorage.clear();
-            sessionStorage.clear();
-          }} 
-          className="btn btn-outline-danger"
-        >
-          Sign Out
-        </button>
+  onClick={() => {
+    // Clear local storage first
+    localStorage.clear();
+    sessionStorage.clear();
+    
+    // Use proper Cognito logout URL
+    const currentOrigin = window.location.origin;
+    const logoutUrl = `https://eu-central-19qe4outov.auth.eu-central-1.amazoncognito.com/logout?client_id=5fej7hpgs2p8qp3k37tq0p3sni&logout_uri=${encodeURIComponent(currentOrigin)}`;
+    window.location.href = logoutUrl;
+  }} 
+  className="btn btn-outline-danger"
+>
+  Sign Out
+</button>
       </div>
     </div>
   );
