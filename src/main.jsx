@@ -3,7 +3,6 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App.jsx';
 import { AuthProvider } from "react-oidc-context";
-import './amplify-config';
 
 const cognitoAuthConfig = {
   authority: "https://eu-central-19qe4outov.auth.eu-central-1.amazoncognito.com",
